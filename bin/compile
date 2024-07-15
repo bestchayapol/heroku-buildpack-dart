@@ -1,39 +1,6 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
-#!/bin/bash
 
-BUILD_DIR=$1
-ENV_DIR=$2
-
-DART_SDK_URL=https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-linux-x64-release.zip
-
-# Ensure the Dart SDK URL is set
-if [ -z "$DART_SDK_URL" ]; then
-  echo "ERROR: DART_SDK_URL is not set."
-  exit 1
-fi
-
-# Download and extract the Dart SDK
-echo "Downloading Dart SDK from $DART_SDK_URL..."
-curl -L "$DART_SDK_URL" -o dart-sdk.zip
-unzip dart-sdk.zip -d $BUILD_DIR
-
-# Add Dart SDK to PATH
-export PATH=$BUILD_DIR/dart-sdk/bin:$PATH
-
-# Check if pub is available
-if ! command -v pub &> /dev/null
-then
-    echo "ERROR: pub could not be found."
-    exit 1
-fi
-
-# Run pub get
-echo "Running pub get..."
-cd $BUILD_DIR
-pub get
-
-echo "Buildpack script completed successfully."
 # fail fast
 set -e
 #set -x
@@ -73,7 +40,7 @@ build_pubspec() {
   export PATH=$PATH:$DART_PATH:$PUB_CACHE_BIN
   message "*** Running pub get"
 
-  pub --version
+  # dart pub --version
 
   #start pub from the /app folder to have correct symlink paths
   dart pub get  
